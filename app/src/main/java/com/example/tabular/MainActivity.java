@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         arrayList.add(new ExampleItem("first","first"));
-        Log.d("Array","on Response "+arrayList.get(0).getOcassion() +arrayList.get(0).getDate());
         manager=new LinearLayoutManager(this);
 
 //
