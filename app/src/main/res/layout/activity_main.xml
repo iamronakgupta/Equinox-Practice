@@ -32,21 +32,34 @@
             />
 
     </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.core.widget.NestedScrollView
-        app:layout_constraintTop_toBottomOf="@+id/appbar"
+        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintTop_toBottomOf="@+id/appbar">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/line1"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/line"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/calendar" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cons_dates"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginHorizontal="20dp">
+                android:layout_marginHorizontal="20dp"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/date_text"
@@ -109,46 +122,37 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <org.naishadhparmar.zcustomcalendar.CustomCalendar
-                android:id="@+id/calendar"
-                android:layout_marginHorizontal="20dp"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recylerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/cons_dates"
-                android:outlineSpotShadowColor="#fff"
-                android:outlineAmbientShadowColor="#fff"/>
-            <ImageView
-                android:id="@+id/line1"
-                android:layout_width="match_parent"
-                android:layout_height="5dp"
-                android:layout_marginTop="30dp"
-                android:src="@drawable/line"
-                android:layout_marginHorizontal="30dp"
-                app:layout_constraintTop_toBottomOf="@id/calendar"
-                app:layout_constraintStart_toStartOf="parent"
-                />
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@+id/line1"
+                tools:listitem="@layout/holiday_list" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginVertical="20dp"
                 android:background="#000"
                 android:fontFamily="sans-serif-medium"
                 android:paddingHorizontal="10dp"
                 android:text="Today's Holidays"
-                android:layout_marginVertical="20dp"
                 android:textColor="#fff"
                 android:textSize="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/calendar" />
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recylerview"
-                android:layout_marginTop="20dp"
+
+            <org.naishadhparmar.zcustomcalendar.CustomCalendar
+                android:id="@+id/calendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                app:layout_constraintTop_toBottomOf="@+id/line1"
-                tools:listitem="@layout/holiday_list"/>
+                android:outlineAmbientShadowColor="#fff"
+                android:outlineSpotShadowColor="#fff"
+                app:layout_constraintTop_toBottomOf="@+id/cons_dates" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -169,5 +173,15 @@
         app:tint="#fff"
         android:backgroundTint="#FB1B1B"
         />
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/nestedScrollView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -29,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView view;
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager manager;
-    ArrayList<ExampleItem> arrayList=new ArrayList<>();
+    ArrayList<ExampleItem> arrayList = new ArrayList<>();
+    ProgressBar bar;
 
 
     @Override
@@ -37,61 +40,67 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         view=findViewById(R.id.recylerview);
+        bar=findViewById(R.id.progressbar);
 
 
+        manager=new LinearLayoutManager(this);
+        view.setLayoutManager(manager);
+
+        RequestQueue queue = MySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
+
+        JsonArrayRequest arrayRequest = new JsonArrayRequest(Request.Method.GET,
+                    "https://date.nager.at/api/v2/PublicHolidays/2017/AT",
+                    null, new Response.Listener<JSONArray>( ) {
+                @Override
+
+                public void onResponse(JSONArray response) {
 
 
-        RequestQueue queue = Volley.newRequestQueue(this);
-        JsonArrayRequest arrayRequest=new JsonArrayRequest(Request.Method.GET,
-                "https://date.nager.at/api/v2/PublicHolidays/2017/AT",
-               null , new Response.Listener<JSONArray>( ) {
-            @Override
+                    for (int i = 0; i < response.length( ); i++) {
 
-            public void onResponse(JSONArray response) throws ArrayIndexOutOfBoundsException {
+                        try {
+                            JSONObject jsonObject = response.getJSONObject(i);
 
+//                            Log.d("Holiday", "on Response " + jsonObject.getString("name") + jsonObject.getString("date"));
+                            arrayList.add(new ExampleItem(jsonObject.getString("name"), jsonObject.getString("date")));
 
-                for(int i=0;i<response.length();i++){
-
-                    try {
-                        JSONObject jsonObject=response.getJSONObject(i);
-                        Log.d("Holiday","on Response "+jsonObject.getString("name") +jsonObject.getString("date"));
-
-                        arrayList.add(new ExampleItem(jsonObject.getString("name"),jsonObject.getString("date")));
+                            Log.d("Holiday2", "on Response " + arrayList.get(i).getDate( ) + arrayList.get(i).getOcassion( ));
+//                            Toast.makeText(MainActivity.this,
+//                                    arrayList.get(i).getDate()+arrayList.get(i).getOcassion(),Toast.LENGTH_SHORT).show();
 
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    catch (ArrayIndexOutOfBoundsException e){
-                        e.printStackTrace();
-                        Log.d("Error","Out of Bound");
-
-                    }
+                        } catch (JSONException e) {
+                            e.printStackTrace( );
+                        }
 
 
 //                    Toast.makeText(MainActivity.this,arrayList.get(i).getOcassion(),Toast.LENGTH_SHORT).show();
+                        bar.setVisibility(View.INVISIBLE);
+                    }
+                    adapter=new CustomAdapter(arrayList);
+                    view.setAdapter(adapter);
+
+
 
                 }
 
+            }, new Response.ErrorListener( ) {
 
-            }
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    bar.setVisibility(View.INVISIBLE);
+                    Toast.makeText(MainActivity.this, "Not working", Toast.LENGTH_SHORT).show( );
 
-        }, new Response.ErrorListener( ) {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(MainActivity.this,"Not working",Toast.LENGTH_SHORT).show();
+                }
+            });
 
-            }
-        });
+            queue.add(arrayRequest);
 
-        arrayList.add(new ExampleItem("first","first"));
-        manager=new LinearLayoutManager(this);
+
+
 
 //
-        adapter=new CustomAdapter(arrayList);
-        view.setLayoutManager(manager);
-        view.setAdapter(adapter);
-        queue.add(arrayRequest);
+
 
 
 
